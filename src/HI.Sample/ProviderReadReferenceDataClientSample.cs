@@ -33,7 +33,7 @@ namespace Nehta.VendorLibrary.HI.Sample
     /// </summary>
     class ProviderReadReferenceDataClientSample
     {
-        public void Sample()
+        public (readReferenceDataResponse,Exception,string) Sample()
         {
             // ------------------------------------------------------------------------------
             // Set up
@@ -43,10 +43,10 @@ namespace Nehta.VendorLibrary.HI.Sample
 
             // Obtain the certificate by serial number
             X509Certificate2 tlsCert = X509CertificateUtil.GetCertificate(
-                "Serial Number",
+                "32ED",
                 X509FindType.FindBySerialNumber,
                 StoreName.My,
-                StoreLocation.CurrentUser,
+                StoreLocation.LocalMachine,
                 true
                 );
 
@@ -58,29 +58,31 @@ namespace Nehta.VendorLibrary.HI.Sample
             // Values below should be provided by Medicare
             ProductType product = new ProductType()
             {
-                platform = "Your system platform (Eg. Windows XP SP3)",     // Can be any value
-                productName = "Product Name",                               // Provided by Medicare
-                productVersion = "Product Version",                         // Provided by Medicare
+                platform = "Windows 10",     // Can be any value
+                productName = "HIPS",                               // Provided by Medicare
+                productVersion = "8.3",                         // Provided by Medicare
                 vendor = new QualifiedId()
                 {
-                    id = "Vendor Id",                                       // Provided by Medicare               
-                    qualifier = "Vendor Qualifier"                          // Provided by Medicare
+                    id = "HIPS0001",                                       // Provided by Medicare               
+                    qualifier = "http://ns.electronichealth.net.au/id/hi/vendorid/1.0"                          // Provided by Medicare
                 }
             };
 
             // Set up user identifier details
             QualifiedId user = new QualifiedId()
             {
-                id = "User Id",                                             // User ID internal to your system
-                qualifier = "http://<anything>/id/<anything>/userid/1.0"    // Eg: http://ns.yourcompany.com.au/id/yoursoftware/userid/1.0
+                id = "srkb",                                             // User ID internal to your system
+                qualifier = "http://chamonix.com.au/id/hips/userid/1.0"    // Eg: http://ns.yourcompany.com.au/id/yoursoftware/userid/1.0
             };
 
             // Set up user identifier details
-            QualifiedId hpio = new QualifiedId()
-            {
-                id = "HPIO",                                                // HPIO ID internal to your system
-                qualifier = "http://ns.electronichealth.net.au/id/hi/hpio/1.0"
-            };
+            QualifiedId hpio = null;
+                
+            //    new QualifiedId()
+            //{
+            //    id = "",                                                // HPIO ID internal to your system
+            //    qualifier = "http://<anything>/id/<anything>/hpio/1.0"    // Eg: http://ns.yourcompany.com.au/id/yoursoftware/userid/1.0
+            //};
 
 
             // ------------------------------------------------------------------------------
@@ -89,7 +91,7 @@ namespace Nehta.VendorLibrary.HI.Sample
 
             // Instantiate the client
             ProviderReadReferenceDataClient client = new ProviderReadReferenceDataClient(
-                new Uri("https://HIServiceEndpoint"),
+                new Uri("https://www5.medicareaustralia.gov.au/cert/soap/services/"),
                 product,
                 user,
                 hpio,
@@ -102,13 +104,15 @@ namespace Nehta.VendorLibrary.HI.Sample
                 readReferenceDataResponse readReferenceDataResponse =
                     client.ReadReferenceData(new string[]
                                     {
-                                      "providerTypeCode", 
-                                      "providerSpecialty",
-                                      "providerSpecialisation",
-                                      "organisationTypeCode",
-                                      "organisationService",
-                                      "organisationServiceUnit",
+                                      //"providerTypeCode", 
+                                      //"providerSpecialty",
+                                      //"providerSpecialisation",
+                                      //"organisationTypeCode",
+                                      //"organisationService",
+                                      //"organisationServiceUnit",
+                                      "operatingSystem",
                                     });
+                return (readReferenceDataResponse, null, client.SoapMessages.SoapResponse);
             }
             catch (FaultException fex)
             {
@@ -124,13 +128,13 @@ namespace Nehta.VendorLibrary.HI.Sample
 
                 // If an error is encountered, client.LastSoapResponse often provides a more
                 // detailed description of the error.
-                string soapResponse = client.SoapMessages.SoapResponse;
+                return (null, fex, client.SoapMessages.SoapResponse);
             }
             catch (Exception ex)
             {
                 // If an error is encountered, client.LastSoapResponse often provides a more
                 // detailed description of the error.
-                string soapResponse = client.SoapMessages.SoapResponse;
+                return (null, ex, client.SoapMessages.SoapResponse);
             }
         }
     }

@@ -1,15 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <Company>Australian Digital Health Agency</Company>
-    <Copyright>Copyright ©2022</Copyright>
-    <Authors>Australian Digital Health Agency</Authors>
-    <Description>HI library Sample</Description>
-  </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\HI\HI.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Nehta.VendorLibrary.Common" Version="4.3.0" />
-  </ItemGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net6.0</TargetFramework>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<Company>Australian Digital Health Agency</Company>
+		<Copyright>Copyright ©2022</Copyright>
+		<Authors>Australian Digital Health Agency</Authors>
+		<Description>HI library Sample</Description>
+	</PropertyGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\HI\HI.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Nehta.VendorLibrary.Common" Version="4.3.0" />
+	</ItemGroup>
 </Project>
